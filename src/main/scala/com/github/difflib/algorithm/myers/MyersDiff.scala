@@ -13,11 +13,11 @@ class MyersDiff[T](equals: (T, T) => Boolean = (_: T) == (_: T)) extends DiffAlg
     * Return empty diff if get the error while procession the difference.
     */
   @throws[DiffException]
-  override def computeDiff(source: List[T], target: List[T],
+  override def computeDiff(source: Seq[T], target: Seq[T],
                            progress: DiffAlgorithmListener): List[Change] = {
     progress.diffStart()
     val path: PathNode = buildPath(source, target, progress)
-    val result: List[Change] = buildRevision(path, source, target)
+    val result: List[Change] = buildRevision(path)
     progress.diffEnd()
     result
   }
@@ -32,7 +32,7 @@ class MyersDiff[T](equals: (T, T) => Boolean = (_: T) == (_: T)) extends DiffAlg
     * @throws DifferentiationFailedException if a diff path could not be found.
     */
   @throws[DifferentiationFailedException]
-  private def buildPath(orig: List[T], rev: List[T],
+  private def buildPath(orig: Seq[T], rev: Seq[T],
                         progress: DiffAlgorithmListener): PathNode = {
     // these are local constants
     val N = orig.size
@@ -95,13 +95,11 @@ class MyersDiff[T](equals: (T, T) => Boolean = (_: T) == (_: T)) extends DiffAlg
     * Constructs a {@link Patch} from a difference path.
     *
     * @param path The path.
-    * @param orig The original sequence.
-    * @param rev  The revised sequence.
     * @return A { @link Patch} script corresponding to the path.
     * @throws DifferentiationFailedException if a { @link Patch} could not be built from the given
     *                                        path.
     */
-  private def buildRevision(actualPath: PathNode, orig: List[T], rev: List[T]): List[Change] = {
+  private def buildRevision(actualPath: PathNode): List[Change] = {
     var path = actualPath
     var changes: List[Change] = Nil
 

@@ -4,6 +4,11 @@ import com.github.difflib.algorithm.myers.MyersDiff
 import com.github.difflib.algorithm.{DiffAlgorithm, DiffAlgorithmListener, DiffException}
 import com.github.difflib.patch.{Patch, PatchFailedException}
 
+/**
+  * Implements the difference and patching engine
+  *
+  * @author <a href="dm.naumenko@gmail.com">Dmitry Naumenko</a>
+  */
 object DiffUtils {
   /**
     * Computes the difference between the original and revised list of elements with default diff algorithm
@@ -34,8 +39,8 @@ object DiffUtils {
     * @throws PatchFailedException if can't apply patch
     */
   @throws[PatchFailedException]
-  def patch[T](original: List[T],
-               patch: Patch[T]): List[T] =
+  def patch[T](original: Seq[T],
+               patch: Patch[T]): Seq[T] =
     patch.applyTo(original)
 
   /**
@@ -45,8 +50,8 @@ object DiffUtils {
     * @param patch   the given patch
     * @return the original text
     */
-  def unpatch[T](revised: List[T],
-                 patch: Patch[T]): List[T] =
+  def unpatch[T](revised: Seq[T],
+                 patch: Patch[T]): Seq[T] =
     patch.restore(revised)
 
 }

@@ -12,7 +12,7 @@ package com.github.difflib.patch
   * @author <a href="dm.naumenko@gmail.com>Dmitry Naumenko</a>
   * @param T The type of the compared elements in the 'lines'.
   */
-case class Chunk[T](position: Int, lines: List[T]) {
+case class Chunk[T](position: Int, lines: Seq[T]) {
   val size: Int = lines.size
 
   /**
@@ -27,7 +27,7 @@ case class Chunk[T](position: Int, lines: List[T]) {
     * @throws com.github.difflib.patch.PatchFailedException
     */
   @throws[PatchFailedException]
-  def verify(target: List[T]): Unit = {
+  def verify(target: Seq[T]): Unit = {
     if (position > target.size || last > target.size)
       throw new PatchFailedException("Incorrect Chunk: the position of chunk > target size")
 

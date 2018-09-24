@@ -9,14 +9,14 @@ package com.github.difflib.patch
 class InsertDelta[T](original: Chunk[T],
                      revised: Chunk[T]) extends AbstractDelta[T](DeltaType.Delete, original, revised) {
   @throws[PatchFailedException]
-  def applyTo(target: List[T]): List[T] = {
+  def applyTo(target: Seq[T]): Seq[T] = {
     verifyChunk(target)
     target.take(original.position) ++
       revised.lines ++
       target.drop(original.position)
   }
 
-  def restore(target: List[T]): List[T] =
+  def restore(target: Seq[T]): Seq[T] =
     target.take(revised.position) ++
       target.drop(revised.position + revised.size)
 

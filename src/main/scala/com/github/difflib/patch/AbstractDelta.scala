@@ -15,11 +15,11 @@ abstract case class AbstractDelta[T](`type`: DeltaType,
     * @throws PatchFailedException
     */
   @throws[PatchFailedException]
-  protected def verifyChunk(target: List[T]): Unit =
+  protected def verifyChunk(target: Seq[T]): Unit =
     original.verify(target)
 
   @throws[PatchFailedException]
-  def applyTo(target: List[T]): List[T]
+  def applyTo(target: Seq[T]): Seq[T]
 
-  def restore(target: List[T]): List[T]
+  def restore(target: Seq[T]): Seq[T]
 }

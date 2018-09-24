@@ -2,14 +2,14 @@ package com.github.difflib.patch
 
 import com.github.difflib.algorithm.Change
 
-case class Patch[T] private(deltas: List[AbstractDelta[T]]) {
+case class Patch[T] private(deltas: Seq[AbstractDelta[T]]) {
   @throws[PatchFailedException]
-  def applyTo(target: List[T]): List[T] =
+  def applyTo(target: Seq[T]): Seq[T] =
     deltas.reverse.foldLeft(target) { (acc, delta) =>
       delta.applyTo(acc)
     }
 
-  def restore(target: List[T]): List[T] =
+  def restore(target: Seq[T]): Seq[T] =
     deltas.reverse.foldLeft(target) { (acc, delta) =>
       delta.restore(acc)
     }
@@ -18,13 +18,10 @@ case class Patch[T] private(deltas: List[AbstractDelta[T]]) {
 }
 
 object Patch {
-  def apply[T](deltas: List[AbstractDelta[T]]): Patch[T] =
+  def apply[T](deltas: Seq[AbstractDelta[T]]): Patch[T] =
     new Patch[T](deltas.sortBy(_.original.position))
 
-  def apply[T](deltas: Seq[AbstractDelta[T]]): Patch[T] =
-    Patch[T](deltas.toList)
-
-  def generate[T](original: List[T], revised: List[T], changes: List[Change]): Patch[T] = Patch[T](
+  def generate[T](original: Seq[T], revised: Seq[T], changes: Seq[Change]): Patch[T] = Patch[T](
     for (change <- changes) yield {
       val orgChunk = Chunk[T](change.startOriginal, original.slice(change.startOriginal, change.endOriginal))
       val revChunk = Chunk[T](change.startRevised, revised.slice(change.startRevised, change.endRevised))

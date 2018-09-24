@@ -16,19 +16,6 @@ trait DiffAlgorithm[T] {
     * @throws DiffException
     */
   @throws[DiffException]
-  def computeDiff(source: List[T], target: List[T], progress: DiffAlgorithmListener): List[Change]
-
-  /**
-    * Simple extension to compute a changeset using arrays.
-    *
-    * @param source
-    * @param target
-    * @param progress
-    * @return
-    * @throws com.github.difflib.algorithm.DiffException
-    */
-  @throws[DiffException]
   def computeDiff(source: Seq[T], target: Seq[T],
-                  progress: DiffAlgorithmListener = DiffAlgorithmListener.Empty): List[Change] =
-    computeDiff(source.toList, target.toList, progress)
+                  progress: DiffAlgorithmListener = DiffAlgorithmListener.Empty): Seq[Change]
 }
