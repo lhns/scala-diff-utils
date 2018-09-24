@@ -120,11 +120,11 @@ class MyersDiff[T](equals: (T, T) => Boolean = (_: T) == (_: T)) extends DiffAlg
       val janchor = path.j
 
       if (ianchor == i && janchor != j)
-        changes = Change(DeltaType.INSERT, ianchor, i, janchor, j) :: changes
+        changes = Change(DeltaType.Insert, ianchor, i, janchor, j) :: changes
       else if (ianchor != i && janchor == j)
-        changes = Change(DeltaType.DELETE, ianchor, i, janchor, j) :: changes
+        changes = Change(DeltaType.Delete, ianchor, i, janchor, j) :: changes
       else
-        changes = Change(DeltaType.CHANGE, ianchor, i, janchor, j) :: changes
+        changes = Change(DeltaType.Change, ianchor, i, janchor, j) :: changes
 
       if (path.isSnake)
         path = path.prev

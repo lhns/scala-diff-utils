@@ -11,20 +11,20 @@ object DeltaType {
   /**
     * A change in the original.
     */
-  object CHANGE extends DeltaType
+  object Change extends DeltaType
 
   /**
     * A delete from the original.
     */
-  object DELETE extends DeltaType
+  object Delete extends DeltaType
 
   /**
     * An insert into the original.
     */
-  object INSERT extends DeltaType
+  object Insert extends DeltaType
 
   /**
     * An do nothing.
     */
-  //object EQUAL extends DeltaType
+  //object Equal extends DeltaType
 }

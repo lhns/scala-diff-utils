@@ -7,7 +7,7 @@ package com.github.difflib.patch
   * @param T The type of the compared elements in the 'lines'.
   */
 class InsertDelta[T](original: Chunk[T],
-                     revised: Chunk[T]) extends AbstractDelta[T](DeltaType.DELETE, original, revised) {
+                     revised: Chunk[T]) extends AbstractDelta[T](DeltaType.Delete, original, revised) {
   @throws[PatchFailedException]
   def applyTo(target: List[T]): List[T] = {
     verifyChunk(target)

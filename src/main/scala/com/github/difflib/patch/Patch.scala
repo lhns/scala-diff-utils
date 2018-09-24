@@ -29,9 +29,9 @@ object Patch {
       val orgChunk = Chunk[T](change.startOriginal, original.slice(change.startOriginal, change.endOriginal))
       val revChunk = Chunk[T](change.startRevised, revised.slice(change.startRevised, change.endRevised))
       change.deltaType match {
-        case DeltaType.DELETE => new DeleteDelta[T](orgChunk, revChunk)
-        case DeltaType.INSERT => new InsertDelta[T](orgChunk, revChunk)
-        case DeltaType.CHANGE => new ChangeDelta[T](orgChunk, revChunk)
+        case DeltaType.Delete => new DeleteDelta[T](orgChunk, revChunk)
+        case DeltaType.Insert => new InsertDelta[T](orgChunk, revChunk)
+        case DeltaType.Change => new ChangeDelta[T](orgChunk, revChunk)
       }
     }
   )
