@@ -9,17 +9,25 @@ package com.github.difflib.patch
 class ChangeDelta[T](original: Chunk[T],
                      revised: Chunk[T]) extends AbstractDelta[T](DeltaType.Change, original, revised) {
   @throws[PatchFailedException]
-  def applyTo(target: Seq[T]): Seq[T] = {
-    verifyChunk(target)
-    target.take(original.position) ++
-      revised.lines ++
-      target.drop(original.position + original.size)
+  override def applyTo[F](target: F)(implicit patchable: Patchable[F, T]): F = {
+    verifyChunk(patchable.toSeq(target))
+    patchable.insert(
+      patchable.remove(
+        target,
+        original.position, original.size
+      ),
+      original.position, revised.lines
+    )
   }
 
-  def restore(target: Seq[T]): Seq[T] =
-    target.take(revised.position) ++
-      original.lines ++
-      target.drop(revised.position + revised.size)
+  override def restore[F](target: F)(implicit patchable: Patchable[F, T]): F =
+    patchable.insert(
+      patchable.remove(
+        target,
+        revised.position, revised.size
+      ),
+      revised.position, original.lines
+    )
 
   override def toString: String =
     s"[ChangeDelta, position: ${original.position}, lines: ${original.lines.mkString("[", ", ", "]")} to ${revised.lines.mkString("[", ", ", "]")}]"

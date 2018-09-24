@@ -19,7 +19,7 @@ abstract case class AbstractDelta[T](`type`: DeltaType,
     original.verify(target)
 
   @throws[PatchFailedException]
-  def applyTo(target: Seq[T]): Seq[T]
+  def applyTo[F](target: F)(implicit patchable: Patchable[F, T]): F
 
-  def restore(target: Seq[T]): Seq[T]
+  def restore[F](target: F)(implicit patchable: Patchable[F, T]): F
 }

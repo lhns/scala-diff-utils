@@ -9,16 +9,19 @@ package com.github.difflib.patch
 class InsertDelta[T](original: Chunk[T],
                      revised: Chunk[T]) extends AbstractDelta[T](DeltaType.Delete, original, revised) {
   @throws[PatchFailedException]
-  def applyTo(target: Seq[T]): Seq[T] = {
-    verifyChunk(target)
-    target.take(original.position) ++
-      revised.lines ++
-      target.drop(original.position)
+  override def applyTo[F](target: F)(implicit patchable: Patchable[F, T]): F = {
+    verifyChunk(patchable.toSeq(target))
+    patchable.insert(
+      target,
+      original.position, revised.lines
+    )
   }
 
-  def restore(target: Seq[T]): Seq[T] =
-    target.take(revised.position) ++
-      target.drop(revised.position + revised.size)
+  override def restore[F](target: F)(implicit patchable: Patchable[F, T]): F =
+    patchable.remove(
+      target,
+      revised.position, revised.size
+    )
 
   override def toString: String =
     s"[InsertDelta, position: ${original.position}, lines: ${revised.lines.mkString("[", ", ", "]")}]"

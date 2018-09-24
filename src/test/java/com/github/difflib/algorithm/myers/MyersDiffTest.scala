@@ -18,10 +18,12 @@ object MyersDiffTest {
     assertEquals(4, patch.deltas.size)
     println(patch.toString)
     require("Patch{deltas=[[DeleteDelta, position: 0, lines: [A, B]], [InsertDelta, position: 3, lines: [B]], [DeleteDelta, position: 5, lines: [B]], [InsertDelta, position: 7, lines: [C]]]}" == patch.toString)
+    println(revised)
+    println(patch.applyTo(original))
   }
 
   def main(args: Array[String]): Unit = {
-    testDiffMyersExample1ForwardWithListener()
+    testDiffMyersExample1Forward()
   }
 
   @throws[DiffException]

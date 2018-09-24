@@ -4,12 +4,12 @@ import com.github.difflib.algorithm.Change
 
 case class Patch[T] private(deltas: Seq[AbstractDelta[T]]) {
   @throws[PatchFailedException]
-  def applyTo(target: Seq[T]): Seq[T] =
+  def applyTo[F](target: F)(implicit patchable: Patchable[F, T]): F =
     deltas.reverse.foldLeft(target) { (acc, delta) =>
       delta.applyTo(acc)
     }
 
-  def restore(target: Seq[T]): Seq[T] =
+  def restore[F](target: F)(implicit patchable: Patchable[F, T]): F =
     deltas.reverse.foldLeft(target) { (acc, delta) =>
       delta.restore(acc)
     }
