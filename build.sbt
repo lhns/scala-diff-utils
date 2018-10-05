@@ -1,6 +1,6 @@
 inThisBuild(Seq(
   name := "scala-diff-utils",
-  version := "2.3-SNAPSHOT",
+  version := "1.0.1",
 
   scalaVersion := "2.12.6"
 ))
