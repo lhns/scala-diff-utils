@@ -11,8 +11,7 @@ import com.github.difflib.patch.{Patch, PatchFailedException, Patchable}
   * @author <a href="dm.naumenko@gmail.com">Dmitry Naumenko</a>
   */
 object DiffUtils {
-  private def defaultDiffAlgorithm[T] = new MyersDiff[T]()
-  private def defaultDiffAlgorithmListener = DiffAlgorithmListener.Empty
+  def defaultDiffAlgorithm[T] = new MyersDiff[T]()
 
   /**
     * Computes the difference between the original and revised list of elements with default diff algorithm
@@ -27,7 +26,7 @@ object DiffUtils {
   def diff[T](original: Seq[T],
               revised: Seq[T],
               algorithm: DiffAlgorithm[T] = defaultDiffAlgorithm,
-              progress: DiffAlgorithmListener = defaultDiffAlgorithmListener): Patch[T] =
+              progress: DiffAlgorithmListener = DiffAlgorithmListener.Empty): Patch[T] =
     Patch.generate(
       original,
       revised,
@@ -65,7 +64,7 @@ object DiffUtils {
   def patch[F, T](original: F,
                   revised: Seq[T],
                   algorithm: DiffAlgorithm[T] = defaultDiffAlgorithm,
-                  progress: DiffAlgorithmListener = defaultDiffAlgorithmListener)
+                  progress: DiffAlgorithmListener = DiffAlgorithmListener.Empty)
                  (implicit patchable: Patchable[F, T]): F =
     patch(original, diff(original.toSeq, revised, algorithm, progress))
 }
