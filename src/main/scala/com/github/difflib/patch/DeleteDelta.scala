@@ -1,5 +1,7 @@
 package com.github.difflib.patch
 
+import com.github.difflib.patch.Patchable._
+
 /**
   * Describes the delete-delta between original and revised texts.
   *
@@ -11,17 +13,11 @@ class DeleteDelta[T](original: Chunk[T],
   @throws[PatchFailedException]
   override def applyTo[F](target: F)(implicit patchable: Patchable[F, T]): F = {
     verifyChunk(patchable.toSeq(target))
-    patchable.remove(
-      target,
-      original.position, original.size
-    )
+    target.remove(original.position, original.size)
   }
 
   override def restore[F](target: F)(implicit patchable: Patchable[F, T]): F =
-    patchable.insert(
-      target,
-      revised.position, original.lines
-    )
+    target.insert(revised.position, original.lines)
 
   override def toString =
     s"[DeleteDelta, position: ${original.position}, lines: ${original.lines.mkString("[", ", ", "]")}]"

@@ -2,7 +2,8 @@ package com.github.difflib
 
 import com.github.difflib.algorithm.myers.MyersDiff
 import com.github.difflib.algorithm.{DiffAlgorithm, DiffAlgorithmListener, DiffException}
-import com.github.difflib.patch.{Patch, PatchFailedException}
+import com.github.difflib.patch.Patchable._
+import com.github.difflib.patch.{Patch, PatchFailedException, Patchable}
 
 /**
   * Implements the difference and patching engine
@@ -10,6 +11,9 @@ import com.github.difflib.patch.{Patch, PatchFailedException}
   * @author <a href="dm.naumenko@gmail.com">Dmitry Naumenko</a>
   */
 object DiffUtils {
+  private def defaultDiffAlgorithm[T] = new MyersDiff[T]()
+  private def defaultDiffAlgorithmListener = DiffAlgorithmListener.Empty
+
   /**
     * Computes the difference between the original and revised list of elements with default diff algorithm
     *
@@ -22,11 +26,11 @@ object DiffUtils {
   @throws[DiffException]
   def diff[T](original: Seq[T],
               revised: Seq[T],
-              algorithm: DiffAlgorithm[T] = new MyersDiff[T](),
-              progress: DiffAlgorithmListener = DiffAlgorithmListener.Empty): Patch[T] =
+              algorithm: DiffAlgorithm[T] = defaultDiffAlgorithm,
+              progress: DiffAlgorithmListener = defaultDiffAlgorithmListener): Patch[T] =
     Patch.generate(
-      original.toList,
-      revised.toList,
+      original,
+      revised,
       algorithm.computeDiff(original, revised, progress)
     )
 
@@ -39,8 +43,9 @@ object DiffUtils {
     * @throws PatchFailedException if can't apply patch
     */
   @throws[PatchFailedException]
-  def patch[T](original: Seq[T],
-               patch: Patch[T]): Seq[T] =
+  def patch[F, T](original: F,
+                  patch: Patch[T])
+                 (implicit patchable: Patchable[F, T]): F =
     patch.applyTo(original)
 
   /**
@@ -50,8 +55,17 @@ object DiffUtils {
     * @param patch   the given patch
     * @return the original text
     */
-  def unpatch[T](revised: Seq[T],
-                 patch: Patch[T]): Seq[T] =
+  def unpatch[F, T](revised: F,
+                    patch: Patch[T])
+                   (implicit patchable: Patchable[F, T]): F =
     patch.restore(revised)
 
+
+  @throws[PatchFailedException]
+  def patch[F, T](original: F,
+                  revised: Seq[T],
+                  algorithm: DiffAlgorithm[T] = defaultDiffAlgorithm,
+                  progress: DiffAlgorithmListener = defaultDiffAlgorithmListener)
+                 (implicit patchable: Patchable[F, T]): F =
+    patch(original, diff(original.toSeq, revised, algorithm, progress))
 }

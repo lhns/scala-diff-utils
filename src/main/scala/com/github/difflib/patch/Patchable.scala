@@ -7,6 +7,13 @@ trait Patchable[F, T] {
 }
 
 object Patchable {
+
+  implicit class PatchableOps[F, T](val self: F)(implicit patchable: Patchable[F, T]) {
+    def remove(position: Int, size: Int): F = patchable.remove(self, position, size)
+    def insert(position: Int, elements: Seq[T]): F = patchable.insert(self, position, elements)
+    def toSeq: Seq[T] = patchable.toSeq(self)
+  }
+
   implicit def SeqPatchable[T]: Patchable[Seq[T], T] = new Patchable[Seq[T], T] {
     override def remove(self: Seq[T], position: Int, size: Int): Seq[T] =
       self.take(position) ++ self.drop(position + size)
