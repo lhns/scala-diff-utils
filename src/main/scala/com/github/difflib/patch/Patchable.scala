@@ -16,10 +16,11 @@ object Patchable {
     def insert(position: Int, elements: Seq[T]): F = patchable.insert(self, position, elements)
     def toSeq: Seq[T] = patchable.toSeq(self)
 
+    @throws[PatchFailedException]
     def patch(revised: Seq[T],
               algorithm: DiffAlgorithm[T] = DiffUtils.defaultDiffAlgorithm,
               progress: DiffAlgorithmListener = DiffAlgorithmListener.Empty): F =
-      DiffUtils.patch(self, revised, algorithm, progress)
+      DiffUtils.patch(self, DiffUtils.diff(self.toSeq, revised, algorithm, progress))
   }
 
   implicit def SeqPatchable[T]: Patchable[Seq[T], T] = new Patchable[Seq[T], T] {

@@ -2,7 +2,6 @@ package com.github.difflib
 
 import com.github.difflib.algorithm.myers.MyersDiff
 import com.github.difflib.algorithm.{DiffAlgorithm, DiffAlgorithmListener, DiffException}
-import com.github.difflib.patch.Patchable._
 import com.github.difflib.patch.{Patch, PatchFailedException, Patchable}
 
 /**
@@ -58,13 +57,4 @@ object DiffUtils {
                     patch: Patch[T])
                    (implicit patchable: Patchable[F, T]): F =
     patch.restore(revised)
-
-
-  @throws[PatchFailedException]
-  def patch[F, T](original: F,
-                  revised: Seq[T],
-                  algorithm: DiffAlgorithm[T] = defaultDiffAlgorithm,
-                  progress: DiffAlgorithmListener = DiffAlgorithmListener.Empty)
-                 (implicit patchable: Patchable[F, T]): F =
-    patch(original, diff(original.toSeq, revised, algorithm, progress))
 }
