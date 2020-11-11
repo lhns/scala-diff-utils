@@ -1,3 +1,7 @@
+lazy val scalaVersions = Seq("2.13.3", "2.12.12")
+
+ThisBuild / scalaVersion := scalaVersions.head
+
 lazy val commonSettings: SettingsDefinition = Def.settings(
   organization := "de.lolhens",
   name := "scala-diff-utils",
@@ -38,11 +42,7 @@ lazy val commonSettings: SettingsDefinition = Def.settings(
   )).toList
 )
 
-lazy val scalaVersions = Seq("2.13.3", "2.12.12")
-
 name := (root / name).value
-
-ThisBuild / scalaVersion := scalaVersions.head
 
 lazy val root: Project =
   project
