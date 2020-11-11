@@ -13,7 +13,7 @@ Main reason to build this library was the lack of easy-to-use libraries with all
 ## Usage
 ### build.sbt
 ```sbt
-libraryDependencies += "de.lolhens" %% "scala-diff-utils" % "0.1.0"
+libraryDependencies += "de.lolhens" %% "scala-diff-utils" % "1.1.0"
 ```
 
 ## License
