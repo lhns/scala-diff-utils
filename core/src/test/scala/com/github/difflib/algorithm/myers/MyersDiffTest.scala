@@ -1,45 +1,36 @@
 package com.github.difflib.algorithm.myers
 
-import com.github.difflib.algorithm.{DiffAlgorithmListener, DiffException}
+import com.github.difflib.algorithm.DiffAlgorithmListener
 import com.github.difflib.patch.Patch
 
 import scala.collection.mutable
 
-object MyersDiffTest {
-  def assertNotNull(e: Any): Unit = require(e != null)
-  def assertEquals[T](a: T, b: T): Unit = require(a == b)
-
-  @throws[DiffException]
-  def testDiffMyersExample1Forward(): Unit = {
+class MyersDiffTest extends munit.FunSuite {
+  test("testDiffMyersExample1Forward") {
     val original = Seq("A", "B", "C", "A", "B", "B", "A")
     val revised = Seq("C", "B", "A", "B", "A", "C")
     val patch = Patch.generate(original, revised, new MyersDiff[String]().computeDiff(original, revised))
-    assertNotNull(patch)
+    assertNotEquals(patch, null: Patch[String])
     assertEquals(4, patch.deltas.size)
-    println(patch.toString)
-    require("Patch{deltas=[[DeleteDelta, position: 0, lines: [A, B]], [InsertDelta, position: 3, lines: [B]], [DeleteDelta, position: 5, lines: [B]], [InsertDelta, position: 7, lines: [C]]]}" == patch.toString)
-    println(revised)
-    println(patch.applyTo(original))
+    assertEquals("Patch{deltas=[[DeleteDelta, position: 0, lines: [A, B]], [InsertDelta, position: 3, lines: [B]], [DeleteDelta, position: 5, lines: [B]], [InsertDelta, position: 7, lines: [C]]]}", patch.toString)
+    assertEquals(revised, patch.applyTo(original))
   }
 
-  def main(args: Array[String]): Unit = {
-    testDiffMyersExample1Forward()
-  }
-
-  @throws[DiffException]
-  def testDiffMyersExample1ForwardWithListener(): Unit = {
+  test("testDiffMyersExample1ForwardWithListener") {
     val original = Seq("A", "B", "C", "A", "B", "B", "A")
     val revised = Seq("C", "B", "A", "B", "A", "C")
     val logdata = new mutable.ListBuffer[String]()
     val patch = Patch.generate(original, revised, new MyersDiff[String]().computeDiff(original, revised, new DiffAlgorithmListener() {
       override def diffStart(): Unit = logdata += "start"
+
       override def diffStep(value: Int, max: Int): Unit = logdata += (value + " - " + max)
+
       override def diffEnd(): Unit = logdata += "end"
     }))
-    assertNotNull(patch)
+    assertNotEquals(patch, null: Patch[String])
     assertEquals(4, patch.deltas.size)
     assertEquals("Patch{deltas=[[DeleteDelta, position: 0, lines: [A, B]], [InsertDelta, position: 3, lines: [B]], [DeleteDelta, position: 5, lines: [B]], [InsertDelta, position: 7, lines: [C]]]}", patch.toString)
-    println(logdata)
+    assertEquals(logdata.toSeq, Seq("start", "0 - 14", "1 - 14", "2 - 14", "3 - 14", "4 - 14", "5 - 14", "end"))
     assertEquals(8, logdata.size)
   }
 }
