@@ -38,18 +38,28 @@ lazy val commonSettings: SettingsDefinition = Def.settings(
   )).toList
 )
 
-//name := (root.jvm(scalaVersions.head) / name).value
-
-ThisBuild / scalaVersion := "2.13.3"
-
 lazy val scalaVersions = Seq("2.13.3", "2.12.12")
 
-lazy val root = project /*projectMatrix*/.in(file("."))
+name := (root / name).value
+
+ThisBuild / scalaVersion := scalaVersions.head
+
+lazy val root: Project =
+  project
+    .in(file("."))
+    .settings(commonSettings)
+    .settings(
+      publishArtifact := false,
+      publish / skip := true
+    )
+    .aggregate(core.projectRefs: _*)
+
+lazy val core = projectMatrix.in(file("core"))
   .settings(commonSettings)
   .settings(
     libraryDependencies += "org.scalameta" %% "munit" % "0.7.17" % Test,
 
     testFrameworks += new TestFramework("munit.Framework")
   )
-  //.jvmPlatform(scalaVersions)
-  //.jsPlatform(scalaVersions)
+  .jvmPlatform(scalaVersions)
+  .jsPlatform(scalaVersions)
