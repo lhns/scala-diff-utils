@@ -14,10 +14,10 @@ Main reason to build this library was the lack of easy-to-use libraries with all
 ### build.sbt
 ```sbt
 // use this snippet for the JVM
-libraryDependencies += "de.lolhens" %% "scala-diff-utils" % "1.1.0"
+libraryDependencies += "de.lolhens" %% "scala-diff-utils" % "1.1.1"
 
 // use this snippet for JS, or cross-building
-libraryDependencies += "de.lolhens" %%% "scala-diff-utils" % "1.1.0"
+libraryDependencies += "de.lolhens" %%% "scala-diff-utils" % "1.1.1"
 ```
 
 ## License
