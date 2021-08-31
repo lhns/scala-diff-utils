@@ -58,7 +58,7 @@ lazy val root: Project =
 lazy val core = projectMatrix.in(file("core"))
   .settings(commonSettings)
   .settings(
-    libraryDependencies += "org.scalameta" %%% "munit" % "0.7.28" % Test,
+    libraryDependencies += "org.scalameta" %%% "munit" % "0.7.29" % Test,
 
     testFrameworks += new TestFramework("munit.Framework"),
 
